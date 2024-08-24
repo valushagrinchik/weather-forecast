@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:14
+    environment:
+      - POSTGRES_DB=weather_forecast
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: always
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+      - ~/docker-volumes/weather-forecast-postgres-data:/var/lib/postgresql/data
+    ports:
+      - '5433:5432'
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    ports:
+      - '3000:3000'
+
+
+volumes:
+  weather-forecast-postgres-data:
